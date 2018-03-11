@@ -1,0 +1,6 @@
+SCRIPT
+-------
+my_system_info : This script is written to get the system information.
+To run the script:
+chmod +x my_system_info
+./my_system_info
