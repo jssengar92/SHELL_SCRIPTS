@@ -1,0 +1,39 @@
+#!/bin/bash
+
+NC="\033[00;00m"
+echo -e "\033[00;31m CURRENT GIT STATUS $NC"
+git status
+
+echo -e "\033[00;32m WANT TO ADD NEW FILE TO REPOSITORY$NC"
+read responce
+
+if [ $responce = y ]
+then
+	echo -e "\033[00;33m NAME THE FILE U WANT TO ADD$NC"
+	read file
+		git ls-files
+		git add $file
+		git status
+	echo -e "\033[00;34m WANT U COMMIT$NC"
+	read responce
+	if [ $responce = y ]
+	then
+		echo -e "\033[00;35m WRITE COMMIT MESSAGE$NC"
+		read msg
+		git commit -m "$msg"
+		git status
+		echo -e "\033[00;36m PUSHING THE CHANGES INTO REPOSITORY$NC"
+		read
+		git push origin master
+	fi
+	echo -e "\033[01;31m PUSH THE CHANGES DONE!!QUITING$NC"
+	exit
+fi
+
+echo -e "\033[01;31m OKK..AS YOU WISH$NC"
+exit
+
+
+#git show
+#git log
+#git diff
