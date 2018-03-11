@@ -1,0 +1,61 @@
+#!/bin/bash
+clear		#clear the screen
+
+reset=$(tput sgr0) #to display normal text
+Externalip=$(curl -s ipecho.net/plain;echo)
+nameserver=$(cat /etc/resolv.conf | sed '1 d' | awk '{print $2}')
+cat /etc/os-release | grep 'PRETTY_NAME' > /tmp/osrelease
+free -h | grep -v + > /tmp/free
+df -h | grep 'Filesystem\|/dev/sda*' > /tmp/sys
+uptime1=$(uptime | awk '{print $3 $4}' | cut -f1 -d,)
+ping -c 1 www.google.com &> /dev/null
+
+echo -e "\033[00;31m*********************************************************************************************************************" $reset
+echo -e "\033[00;32mInternet: $reset CONNECTED" || echo -e "\033[00;32m Internet: $reset Disconnect"
+echo -ne "\033[32mOS NAME:\033[00;00m" $tecreset && cat /tmp/osrelease
+echo -e "\033[00;32mEffictive USER ID: "  $reset $(whoami)
+echo -e "\033[00;32mShow Who is logged ON: "  $reset $(who am i)
+echo -e "\033[00;32mShow Who all in all terminal: "  $reset $(who)
+#echo -e "\033[00;32mShow Logged in users in all terminal: "  $reset $(users)
+echo -e "\033[00;32mOperating System Type: "  $reset $(uname -o)
+echo -e "\033[00;32mOS Architecture: "  $reset $(uname -m)
+echo -e "\033[00;32mOS kernel-release: "  $reset $(uname -r)
+echo -e "\033[00;32mOS Hostname: "  $reset $HOSTNAME
+echo -e "\033[00;32mInternal IP: "  $reset $(hostname -I)
+echo -e "\033[00;32mExternal IP: "  $reset $Externalip
+echo -e "\033[00;32mName Server: "  $reset $nameserver
+echo -e "\033[00;32mRAM Usage: "  $reset && cat /tmp/free | grep Mem
+echo -e "\033[00;32mSWAP Usage: "  $reset && cat /tmp/free | grep Swap
+echo -e "\033[00;32mDisk Usage: "  $reset && cat /tmp/sys 
+echo -e "\033[00;32mTotal Usage: "  $reset $(df | grep -v \run | awk '{print $5,$6}')
+echo -e "\033[00;32mUptime[HH:MM]: "  $reset $uptime1
+echo -e "\033[00;32mDate And Time: "  $reset $(date)
+echo -e "\033[00;32mRunlevel: "  $reset $(runlevel)
+if [ "$?" = "0" ] ;then fw=on; else fw=off; fi
+echo -e "\033[00;32mFireWall: "  $reset $fw
+echo -e "\033[00;32mDefault GateWay: "  $reset $(netstat -rn | grep UG | awk '{print $2}') 
+echo -e "\033[00;32mProcessor: "  $reset $(grep "model name" /proc/cpuinfo | uniq -c) 
+echo -e "\033[00;32mSystem Version: "  $reset $(cat /proc/version | awk '{print $1,$2,$3,$9,$10,$11}') 
+echo -e "\033[00;32mOpenssl Version: "  $reset $(openssl version) 
+echo -e "\033[00;32mProcesses: " $reset $(top -n1 | grep Tasks) #| cut -f2- -d,|tr -s ' '
+echo -e "\033[00;32mTCP Open Ports: " $reset $(netstat -an | grep LISTEN | awk '{print $4}' |cut -f2 -d:| sort | uniq)
+echo -e "\033[00;32mTCP Open Ports: " $reset $(netstat -an | grep ^udp | awk '{print $4}' |cut -f2 -d:| sort | uniq)
+echo -e "\033[00;31m*********************************************************************************************************************" $reset
+
+rm -rf /tmp/sys /tmp/free /tmp/osrelease
+#load=$(top -n 1 -b | grep "load average:" |awk '{print $10 $11 $12}')
+#echo -e "\033[00;32mAverage Load"  $reset $load
+#cat /etc/os-release | grep 'NAME\|VERSION' | grep -v 'VERSION_ID' | grep -v 'PRETTY_NAME' > /tmp/osrelease
+#echo -n -e "\033[32m OS Version :\033[00;00m" $tecreset  && cat /tmp/osrelease | grep -v "VERSION" | cut -f2 -d\"
+#echo -n -e "\033[32m OS Name :\033[00;00m" $tecreset  && cat /tmp/osrelease | grep -v "VERSION" | cut -f2 -d\"
+#who=$(whoami)
+#who_on=$(who am i)
+#whoall=$(who)
+#os=$(uname -o)
+#architecture=$(uname -m)
+#kernelrelease=$(uname -r)
+#Internalip=$(hostname -I)
+
+
+
+
